@@ -125,7 +125,7 @@
     document.getElementById('gerarPDF').addEventListener('click', function () {
         const numeroNotifi = document.getElementById('numeroNotifi').value;
 
-        fetch('https://script.google.com/macros/s/AKfycbxhoIeNCFKMs6nMsSGr_9DWUaEEZoeMztulufIcBCftXwyaBOF5s4uILzGATwcmeAyM1w/exec', {
+        fetch('https://script.google.com/macros/s/AKfycbxhoIeNCFKMs6nMsSGr\_9DWUaEEZoeMztulufIcBCftXwyaBOF5s4uILzGATwcmeAyM1w/exec?action=getNotificationNumber', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
