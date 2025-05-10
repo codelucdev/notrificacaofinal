@@ -51,15 +51,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.0/html2pdf.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Busca o número de notificação ao carregar a página
-            fetch('https://script.google.com/macros/s/AKfycbxhoIeNCFKMs6nMsSGr_9DWUaEEZoeMztulufIcBCftXwyaBOF5s4uILzGATwcmeAyM1w/exec?action=getNotificationNumber')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('numero_noty').value = data.numero_notificacao;
-                })
-                .catch(error => {
-                    document.getElementById('error-message').textContent = 'Erro ao carregar número. Recarregue a página.';
-                });
+    // Buscar o número de notificação automaticamente ao carregar a página
+    fetch('https://script.google.com/macros/s/AKfycbxhoIeNCFKMs6nMsSGr_9DWUaEEZoeMztulufIcBCftXwyaBOF5s4uILzGATwcmeAyM1w/exec?action=getNotificationNumber')
+        .then(response => response.json())  // Supondo que a resposta seja JSON
+        .then(data => {
+            if (data && data.numero_notificacao) {
+                // Preencher o campo 'numero_noty' com o valor retornado
+                document.getElementById('numero_noty').value = data.numero_notificacao;
+            } else {
+                document.getElementById('error-message').textContent = 'Erro ao obter o número de notificação.';
+            }
+        })
+        .catch(error => {
+            document.getElementById('error-message').textContent = 'Erro ao obter o número de notificação.';
+        });
+});
+
 
             document.getElementById('gerarPDF').addEventListener('click', function() {
                 var numeroNotifi = document.getElementById('numero_noty').value;
@@ -128,17 +135,16 @@
 
                     fetch('https://script.google.com/macros/s/AKfycbxhoIeNCFKMs6nMsSGr_9DWUaEEZoeMztulufIcBCftXwyaBOF5s4uILzGATwcmeAyM1w/exec', {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: 'numeroNotifi=' + encodeURIComponent(numeroNotifi)
+                        body: new URLSearchParams({ numeroNotifi: numeroNotifi })
                     })
                     .then(response => response.text())
                     .then(data => {
+                        document.getElementById('error-message').textContent = data;
+                        // Recarregar a página para obter um novo número de notificação
                         window.location.reload();
                     })
                     .catch(error => {
-                        console.error('Erro:', error);
+                        document.getElementById('error-message').textContent = 'Erro ao enviar os dados.';
                     });
                 };
 
