@@ -52,20 +52,24 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
     // Buscar o número de notificação automaticamente ao carregar a página
-    fetch('https://script.google.com/macros/s/AKfycbxhoIeNCFKMs6nMsSGr_9DWUaEEZoeMztulufIcBCftXwyaBOF5s4uILzGATwcmeAyM1w/exec?action=getNotificationNumber')
-        .then(response => response.json())  // Supondo que a resposta seja JSON
-        .then(data => {
-            if (data && data.numero_notificacao) {
-                // Preencher o campo 'numero_noty' com o valor retornado
-                document.getElementById('numero_noty').value = data.numero_notificacao;
-            } else {
-                document.getElementById('error-message').textContent = 'Erro ao obter o número de notificação.';
-            }
-        })
-        .catch(error => {
-            document.getElementById('error-message').textContent = 'Erro ao obter o número de notificação.';
-        });
-});
+            fetch('https://script.google.com/macros/s/AKfycbxhoIeNCFKMs6nMsSGr_9DWUaEEZoeMztulufIcBCftXwyaBOF5s4uILzGATwcmeAyM1w/exec?action=getNotificationNumber')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erro na resposta do servidor');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && data.numero_notificacao) {
+                        document.getElementById('numero_noty').value = data.numero_notificacao;
+                    } else {
+                        document.getElementById('error-message').textContent = 'Erro ao obter o número de notificação.';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    document.getElementById('error-message').textContent = 'Erro ao obter o número de notificação: ' + error.message;
+                });
 
 
             document.getElementById('gerarPDF').addEventListener('click', function() {
