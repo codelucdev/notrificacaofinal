@@ -51,24 +51,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.0/html2pdf.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-    // Buscar o número de notificação automaticamente ao carregar a página
+    // Gerar automaticamente o número da notificação
             fetch('https://script.google.com/macros/s/AKfycbxhoIeNCFKMs6nMsSGr_9DWUaEEZoeMztulufIcBCftXwyaBOF5s4uILzGATwcmeAyM1w/exec?action=getNotificationNumber')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Erro na resposta do servidor');
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
                     if (data && data.numero_notificacao) {
-                        document.getElementById('numero_noty').value = data.numero_notificacao;
+                        numeroNotifi.value = data.numero_notificacao;
                     } else {
-                        document.getElementById('error-message').textContent = 'Erro ao obter o número de notificação.';
+                        document.getElementById('error-message').textContent = 'Erro ao gerar o número da notificação.';
                     }
                 })
                 .catch(error => {
-                    console.error('Erro:', error);
-                    document.getElementById('error-message').textContent = 'Erro ao obter o número de notificação: ' + error.message;
+                    document.getElementById('error-message').textContent = 'Erro ao gerar o número da notificação.';
                 });
 
 
