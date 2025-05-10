@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notificação de Lote Sujo</title>
     <link rel="stylesheet" type="text/css" href="css/style.css">
-    <script src="script/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.0/html2pdf.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
     <div class="container">
@@ -35,7 +35,7 @@
             <select id="responsavel" name="responsavel" required>
                 <option value="CARLOS ALBERTO FAGUNDES">CARLOS ALBERTO FAGUNDES</option>
                 <option value="Carlos Daniel Pereira de Brito">Carlos Daniel Pereira de Brito</option>
-                <!--<option value="LUIZ FILLIPE MARTINS DA SILVA">LUIZ FILLIPE MARTINS DA SILVA</option>-->
+                <!-- <option value="LUIZ FILLIPE MARTINS DA SILVA">LUIZ FILLIPE MARTINS DA SILVA</option> -->
             </select><br>
             <div>
                 <label for="foto">SELECIONAR FOTO:</label>
@@ -48,15 +48,14 @@
         </form>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.0/html2pdf.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-    // Gerar automaticamente o número da notificação
-            fetch('https://script.google.com/macros/s/AKfycbxhoIeNCFKMs6nMsSGr_9DWUaEEZoeMztulufIcBCftXwyaBOF5s4uILzGATwcmeAyM1w/exec?action=getNotificationNumber')
+            // Gerar automaticamente o número da notificação
+            fetch('https://script.google.com/macros/s/SEU_SCRIPT_ID/exec?action=getNotificationNumber')
                 .then(response => response.json())
                 .then(data => {
                     if (data && data.numero_notificacao) {
-                        numeroNotifi.value = data.numero_notificacao;
+                        document.getElementById('numeroNotifi').value = data.numero_notificacao;
                     } else {
                         document.getElementById('error-message').textContent = 'Erro ao gerar o número da notificação.';
                     }
@@ -65,9 +64,8 @@
                     document.getElementById('error-message').textContent = 'Erro ao gerar o número da notificação.';
                 });
 
-
             document.getElementById('gerarPDF').addEventListener('click', function() {
-                var numeroNotifi = document.getElementById('numero_noty').value;
+                var numeroNotifi = document.getElementById('numeroNotifi').value;
                 var rua = document.getElementById('rua').value.toUpperCase();
                 var bairro = document.getElementById('bairro').value.toUpperCase();
                 var nProximo = document.getElementById('n_proximo').value.toUpperCase();
@@ -115,7 +113,7 @@
                             <footer style="display:flex; justify-content: center; align-items: center; flex-direction: column; height: 100%; width: 100%; padding-bottom:250px;">
                                 <p>_________________________________</p>
                                 <p style="text-align:center;"><strong>${responsavel}</strong></p>
-                                <p><strong style="text-align:center;">${responsavel === 'Carlos Daniel Pereira de Brito' ? 'FISCAL DE POSTURAS' : (responsavel === 'CARLOS ALBERTO FAGUNDES' ? 'NULL')}</strong></p>
+                                <p><strong style="text-align:center;">${responsavel === 'Carlos Daniel Pereira de Brito' ? 'FISCAL DE POSTURAS' : (responsavel === 'CARLOS ALBERTO FAGUNDES' ? 'NULL' : '')}</strong></p>
                                 <p style="text-align: center; padding-top: 18px;">Assinatura________________________________ Data de recebimento____/____/____</p>
                             </footer>
                             <div class="img" style="display:flex; justify-content: center; align-items: center; flex-direction: column; height: 100%; width: 100%;">
@@ -131,7 +129,7 @@
                         jsPDF: { unit: 'pt', format: 'a4', orientation: 'portrait' }
                     }).save();
 
-                    fetch('https://script.google.com/macros/s/AKfycbxhoIeNCFKMs6nMsSGr_9DWUaEEZoeMztulufIcBCftXwyaBOF5s4uILzGATwcmeAyM1w/exec', {
+                    fetch('https://script.google.com/macros/s/SEU_SCRIPT_ID/exec', {
                         method: 'POST',
                         body: new URLSearchParams({ numeroNotifi: numeroNotifi })
                     })
